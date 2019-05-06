@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var multer = require('multer')
 var cors = require('cors');
-const data = require('./models/importdb.js');
+const data = require('./models/querydb.js');
 app.use(cors())
 
 var storage = multer.diskStorage({

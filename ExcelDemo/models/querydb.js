@@ -1,4 +1,4 @@
-var importdb = {
+var querydb = {
   import : (filename) => {
 
   const excelToJson = require('convert-excel-to-json');
@@ -420,8 +420,7 @@ if(net == ''){
   });
   return end;
 }
-
 }
 
 
-module.exports = importdb;
+module.exports = querydb;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import './Navigator.css'
+import './css/Navigator.css'
 
 const btnStyle = {
   fontSize:'30px',
@@ -36,7 +36,7 @@ function Navigator(props) {
       </div>
 
       <div id="main">
-      
+
         <span style={btnStyle} onClick={onOpen}>&#9776; open</span>
       </div>
 
