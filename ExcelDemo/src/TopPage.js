@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
-import './Navigator.css'
+import './css/Navigator.css'
 
 const styles = {
   root: {
@@ -32,18 +32,13 @@ const styles = {
   }
 };
 
-const btnStyle = {
-  fontSize:'30px',
-  cursor:'pointer'
-}
 
 function TopPage(props) {
   const { classes } = props;
-
   const [count, setCount] = useState("0px");
   const [marginLeft, setMarginLeft] = useState("0px")
   const [backgroundColor, setBackgroundColor] = useState("white")
-  const [opacity, setOpacity] = useState("1")
+  const [, setOpacity] = useState("1")
 
   function onOpen() {
     setCount("250px")
@@ -63,10 +58,7 @@ function TopPage(props) {
     document.getElementById("mySidenav").style.width = `${count}`;
     document.getElementById("mainHeader").style.marginLeft = `${marginLeft}`;
     document.body.style.backgroundColor = `${backgroundColor}`
-
-
   });
-
 
   return (
     <div id="mainHeader" className={classes.root}>

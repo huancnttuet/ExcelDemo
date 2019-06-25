@@ -64,14 +64,14 @@ app.get('/process', (req, res) => {
     parseFloat(req.query.temperature)
   ];
   data.findMethod(input_data).then(t => {
-
       console.log(t);
       res.json({nameMethod : t});
-
-
   })
-
 });
+
+app.post('/getListData', (req, res) => {
+  
+})
 
 app.listen(8000, function() {
 

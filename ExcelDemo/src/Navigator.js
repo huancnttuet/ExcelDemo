@@ -6,17 +6,13 @@ const btnStyle = {
   cursor:'pointer'
 }
 
-
-
 function Navigator(props) {
   const [count, setCount] = useState("0px");
   function onOpen() {
     setCount("250px")
-
   }
   function onClose() {
     setCount("0px")
-
   }
   console.log(count);
   useEffect(() => {
@@ -26,7 +22,6 @@ function Navigator(props) {
 
   return (
     <div>
-
       <div id="mySidenav" className="sidenav" >
         <a href="javascript:void(0)" className="closebtn"  onClick={onClose}>&times;</a>
         <a href="#">About</a>
@@ -36,10 +31,8 @@ function Navigator(props) {
       </div>
 
       <div id="main">
-
         <span style={btnStyle} onClick={onOpen}>&#9776; open</span>
       </div>
-
     </div>
   )
 }

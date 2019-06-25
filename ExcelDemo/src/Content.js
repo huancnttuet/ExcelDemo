@@ -81,6 +81,13 @@ function Content(props){
       const [result, setResult] = useState('')
       const [open, setOpen] = useState(false)
       const [notify, setNotify] = useState('warning')
+
+      function fetchListData() {
+        axios.post("http://localhost:8000/getListData").then( res => {
+          console.log(res);
+        })
+      }
+
       function handleClick1() {
         const data = new FormData();
         console.log(selectedFile.value);
@@ -224,6 +231,24 @@ function Content(props){
 
           </Grid>
           <Grid item xs={2} className={classes.gridCenter}>
+            <FormControl className={classes.textField}>
+                <InputLabel htmlFor="Choose Data">Choose Data</InputLabel>
+                <Select
+                  {...choose_data}
+                  inputProps={{
+                    name: 'choose_data',
+                    id: 'choose_data',
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={1}>Sandstone or carbonat</MenuItem>
+                  <MenuItem value={2}>Sandstone</MenuItem>
+                  <MenuItem value={3}>Sandstone or Carbonate[PreferablyCarbonate]</MenuItem>
+                </Select>
+            </FormControl>
+            <h1>_______________________</h1>
             <Card className={classes.cardStyle} >
               <CardHeader title="Name Method"
                 subheader="-----------------------------"
