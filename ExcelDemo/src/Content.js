@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios'
@@ -16,6 +16,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import {useDropzone} from 'react-dropzone';
 
 const styles = theme => ({
   button: {
@@ -81,12 +82,12 @@ function Content(props){
       const [result, setResult] = useState('')
       const [open, setOpen] = useState(false)
       const [notify, setNotify] = useState('warning')
-
-      function fetchListData() {
-        axios.post("http://localhost:8000/getListData").then( res => {
-          console.log(res);
+      const [files, setFiles] = useState([])
+      
+        axios.get("http://localhost:8000/getListData").then( res => {
+          setFiles(res.data)
         })
-      }
+      
 
       function handleClick1() {
         const data = new FormData();
@@ -94,7 +95,7 @@ function Content(props){
         data.append('foo', selectedFile.value)
         axios.post("http://localhost:8000/upload", data, {
           // receive two    parameter endpoint url ,form data
-      }).then(res => { // then print response status
+        }).then(res => { // then print response status
           setResult(res.data.message)
           setOpen(true)
           if(res.data.message === 'success'){
@@ -129,12 +130,45 @@ function Content(props){
 
       const {classes} = props
 
+      const onDrop = useCallback(acceptedFiles => {
+        // Do something with the files
+        console.log(acceptedFiles)
+        const data = new FormData();
+        
+        data.append('foo', acceptedFiles[0])
+        axios.post("http://localhost:8000/upload", data, {
+          // receive two    parameter endpoint url ,form data
+        }).then(res => { // then print response status
+          setResult(res.data.message)
+          setOpen(true)
+          if(res.data.message === 'success'){
+            setNotify('success')
+          } else if(res.data.message === 'error'){
+            setNotify('error')
+          } else {
+            setNotify('warning')
+          }
+        })
+      }, [])
+      const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
       return (
         <Grid container spacing={24} className={classes.contentStyle}>
           <Grid item xs={2}></Grid>
           <Grid item xs={4}>
             <h1 className={classes.fontStyle}>Upload File Excel</h1>
+
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              {
+                isDragActive ?
+                  <p>Drop the files here ...</p> :
+                  <p>Drag 'n' drop some files here, or click to select files</p>
+              }
+            </div>
+
             <TextField type='file' name='foo' label="Name" className={classes.textField} onChange={selectedFile.onChange} />
+
             <Button variant="contained" color="default" className={classes.button}  onClick={handleClick1}>
               Upload
               <CloudUploadIcon className={classes.rightIcon} />
@@ -230,11 +264,12 @@ function Content(props){
               </div>
 
           </Grid>
+          {files[0]}
           <Grid item xs={2} className={classes.gridCenter}>
             <FormControl className={classes.textField}>
                 <InputLabel htmlFor="Choose Data">Choose Data</InputLabel>
                 <Select
-                  {...choose_data}
+                  //  {...files}
                   inputProps={{
                     name: 'choose_data',
                     id: 'choose_data',

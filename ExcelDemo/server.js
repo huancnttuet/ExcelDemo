@@ -3,6 +3,8 @@ var app = express();
 var multer = require('multer')
 var cors = require('cors');
 const data = require('./models/querydb.js');
+const testFolder = './uploads/';
+const fs = require('fs');
 app.use(cors())
 
 var storage = multer.diskStorage({
@@ -39,7 +41,7 @@ app.post('/upload',function(req, res) {
         console.log(file);
 
         data.import(path).then((b)=>{
-          if(b == 1){
+          if(b === 1){
             res.json({message: 'success'});
           } else {
             res.json({message: 'error'});
@@ -52,6 +54,7 @@ app.post('/upload',function(req, res) {
 
 app.get('/process', (req, res) => {
   console.log(req.query);
+  // eslint-disable-next-line no-undef
   input_data = [
     parseFloat(req.query.gravity),
     parseFloat(req.query.viscosity),
@@ -63,14 +66,20 @@ app.get('/process', (req, res) => {
     parseFloat(req.query.depth),
     parseFloat(req.query.temperature)
   ];
+  // eslint-disable-next-line no-undef
   data.findMethod(input_data).then(t => {
       console.log(t);
       res.json({nameMethod : t});
   })
 });
 
-app.post('/getListData', (req, res) => {
-  
+app.get('/getListData', (req, res) => {
+  fs.readdir(testFolder, (err, files) => {
+    files.forEach(file => {
+      console.log(file);
+    });
+    res.json({files: files});
+  });
 })
 
 app.listen(8000, function() {
