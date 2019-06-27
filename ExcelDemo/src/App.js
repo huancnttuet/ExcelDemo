@@ -17,7 +17,7 @@ class App extends React.Component {
             <Route exact path="/" component={Content} />
             <Route path="/list" component={ListData} />
           </Router>
-      
+          
 
         <BottomPage />
       </div>
