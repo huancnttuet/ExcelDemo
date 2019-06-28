@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { element } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import TextField from '@material-ui/core/TextField';
@@ -67,6 +67,7 @@ function Content(props){
       const temperature = useFormInput('')
 
       const selectedFile = useFormInputFile(null)
+
       var paramsValue = {
           gravity: gravity.value,
           viscosity: viscosity.value,
@@ -82,13 +83,34 @@ function Content(props){
       const [result, setResult] = useState('')
       const [open, setOpen] = useState(false)
       const [notify, setNotify] = useState('warning')
-      const [files, setFiles] = useState([])
-      
-        axios.get("http://localhost:8000/getListData").then( res => {
-          setFiles(res.data)
-        })
-      
+      const [files, setFiles] = useState([''])
+      const [once, setOnce] = useState(true);
+      const [once2, setOnce2] = useState(false);
+      const [selectedOption, setSelectedOption] = useState('');
 
+      if(once){
+        axios.get("http://localhost:8000/getListData").then( res => {
+          setFiles(res.data.files)
+          setOnce(false)
+        })
+      }
+
+      if(once2) {
+        
+        axios.post("http://localhost:8000/selectFile", {filename: selectedOption}).then( res => {
+          if(res.data.message === 'success'){
+            setOpen(true)
+            setNotify('success');
+            setResult(`Đang chọn file ${selectedOption}`)
+          } else {
+            setOpen(true)
+            setNotify('error');
+            setResult('Bị lỗi gì đó rồi :(')
+          }
+          setOnce2(false)
+        })
+      }
+      console.log(files)
       function handleClick1() {
         const data = new FormData();
         console.log(selectedFile.value);
@@ -100,6 +122,7 @@ function Content(props){
           setOpen(true)
           if(res.data.message === 'success'){
             setNotify('success')
+            setOnce(true)
           } else if(res.data.message === 'error'){
             setNotify('error')
           } else {
@@ -128,6 +151,11 @@ function Content(props){
         setOpen(false)
       }
 
+      function handleChangeRadio(e) {
+        setSelectedOption(e.target.value)
+        setOnce2(true);
+      }
+      console.log(selectedOption);
       const {classes} = props
 
       const onDrop = useCallback(acceptedFiles => {
@@ -143,6 +171,7 @@ function Content(props){
           setOpen(true)
           if(res.data.message === 'success'){
             setNotify('success')
+            setOnce(true)
           } else if(res.data.message === 'error'){
             setNotify('error')
           } else {
@@ -188,6 +217,19 @@ function Content(props){
                 message={result}
               />
             </Snackbar>
+            <ul style={{listStyle: 'none'}}>
+              {
+                files.map((element, index) => {
+                  return (
+                    <li>
+                      <input type='radio' name='rd' value={element} checked={selectedOption ===  element} onChange={handleChangeRadio}></input>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M4 1c-.55 0-.99.45-.99 1L3 16c0 .55.44 1 1 1h10c.55 0 1-.45 1-1V6l-5-5H4zm6 5V2l4 4h-4z"/></svg>
+                      <a href={`http://localhost:3000/details/${element}`}>{element}</a>
+                    </li>
+                    )
+                })   
+              }
+            </ul>
 
           </Grid>
 
@@ -264,7 +306,7 @@ function Content(props){
               </div>
 
           </Grid>
-          {files[0]}
+          
           <Grid item xs={2} className={classes.gridCenter}>
             <FormControl className={classes.textField}>
                 <InputLabel htmlFor="Choose Data">Choose Data</InputLabel>

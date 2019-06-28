@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require("body-parser");
 var app = express();
 var multer = require('multer')
 var cors = require('cors');
@@ -6,6 +7,8 @@ const data = require('./models/querydb.js');
 const testFolder = './uploads/';
 const fs = require('fs');
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 var storage = multer.diskStorage({
       destination: function (req, file, cb) {
@@ -36,20 +39,25 @@ app.post('/upload',function(req, res) {
     if (!file) {
         return res.json({message: "please upload a file"});
     } else {
-        var path = 'uploads/' + file.filename;
         console.log('upload success!');
-        console.log(file);
-
-        data.import(path).then((b)=>{
-          if(b === 1){
-            res.json({message: 'success'});
-          } else {
-            res.json({message: 'error'});
-          }
-        });
-      }
+        res.json({message: 'success'});
+     }
   });
 
+});
+
+app.post('/selectFile', (req, res) => {
+  console.log(req.body)
+  var selectedFile = req.body.filename;
+  console.log(selectedFile)
+  var path = 'uploads/' + selectedFile;
+    data.import(path).then((b)=>{
+      if(b === 1){
+        res.json({message: 'success'});
+      } else {
+        res.json({message: 'error'});
+      }
+    });
 });
 
 app.get('/process', (req, res) => {
