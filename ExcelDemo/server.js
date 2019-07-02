@@ -46,6 +46,17 @@ app.post('/upload',function(req, res) {
 
 });
 
+
+app.post('/getTable', async (req, res) => {
+  console.log(req.body.filename);
+  var filename = req.body.filename;
+  var path = 'uploads/' + filename;
+  await data.import(path)
+  var rule = await data.getTableRule();
+  var name_method = await data.getTableNameMethod();
+  res.json({rs1: rule, rs2: name_method})
+})
+
 app.post('/selectFile', (req, res) => {
   console.log(req.body)
   var selectedFile = req.body.filename;

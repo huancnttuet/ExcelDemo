@@ -1,6 +1,5 @@
 var querydb = {
   import: (filename) => {
-
     const excelToJson = require('convert-excel-to-json');
     const Sequelize = require('sequelize');
     const sequelize = new Sequelize('demodb', 'root', '12345678', {
@@ -413,6 +412,85 @@ var querydb = {
       }
     });
     return end;
+  },
+  getTableNameMethod: async () => {
+    const Sequelize = require('sequelize');
+    const sequelize = new Sequelize('demodb', 'root', '12345678', {
+      dialect: 'mysql',
+      logging: false
+    });
+    const Method = sequelize.define('method', {
+      name_method: {
+        type: Sequelize.STRING
+      }
+    });
+    const Property = sequelize.define('property', {
+      type: {
+        type: Sequelize.STRING
+      }
+    });
+    const Rule = sequelize.define('rule', {
+      min: {
+        type: Sequelize.DOUBLE
+      },
+      max: {
+        type: Sequelize.DOUBLE
+      },
+      info: {
+        type: Sequelize.STRING
+      },
+      propertyId: {
+        type: Sequelize.INTEGER,
+      },
+      methodId: {
+        type: Sequelize.INTEGER,
+      }
+    });
+
+    return await Method.findAll({
+      attributes: ['name_method'],
+      raw: true
+    }).then(accounts => accounts.map(account => account.name_method))
+
+
+  }, getTableRule: async () => {
+    const Sequelize = require('sequelize');
+    const sequelize = new Sequelize('demodb', 'root', '12345678', {
+      dialect: 'mysql',
+      logging: false
+    });
+    const Method = sequelize.define('method', {
+      name_method: {
+        type: Sequelize.STRING
+      }
+    });
+    const Property = sequelize.define('property', {
+      type: {
+        type: Sequelize.STRING
+      }
+    });
+    const Rule = sequelize.define('rule', {
+      min: {
+        type: Sequelize.DOUBLE
+      },
+      max: {
+        type: Sequelize.DOUBLE
+      },
+      info: {
+        type: Sequelize.STRING
+      },
+      propertyId: {
+        type: Sequelize.INTEGER,
+      },
+      methodId: {
+        type: Sequelize.INTEGER,
+      }
+    });
+
+    return await Rule.findAll({
+      attributes: ['info', 'propertyId', 'methodId'],
+      raw: true
+    }).then(accounts => accounts.map(account => [account.info, account.propertyId, account.methodId]))
   }
 }
 
