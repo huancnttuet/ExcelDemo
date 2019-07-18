@@ -24,7 +24,8 @@ excel_router.post("/upload", (req, res) => {
 
 excel_router.post("/selectFile", async (req, res) => {
   var selectedFile = req.body.filename;
-  res.json(await excel.selectedFile(selectedFile));
+  var result = await excel.selectedFile(selectedFile);
+  res.json(result);
 });
 
 excel_router.get("/process", async (req, res) => {
@@ -40,10 +41,11 @@ excel_router.get("/process", async (req, res) => {
     parseFloat(req.query.depth),
     parseFloat(req.query.temperature)
   ];
+  var id = parseInt(req.query.id);
   var result = await excel.process(input_data);
   console.log(result);
   //save history
-  var kq = await history.createHistory(input_data, result);
+  var kq = await history.createHistory(input_data, result, id);
   console.log(kq);
   res.json(result);
 });
@@ -59,6 +61,12 @@ excel_router.get("/getTable", async (req, res) => {
 
 excel_router.get("/getTableHistory", async (req, res) => {
   res.json(await history.getHistory());
+});
+
+excel_router.post("/getTableHistoryByIdUser", async (req, res) => {
+  var id = req.body.id;
+  console.log(id);
+  res.json(await history.getHistoryByIdUser(id));
 });
 
 module.exports = excel_router;

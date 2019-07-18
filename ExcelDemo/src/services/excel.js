@@ -21,11 +21,18 @@ const getTable = () => {
 const getTableHistory = () => {
   return axios.get(`${process.env.REACT_APP_API_URL}/getTableHistory`);
 };
+const getTableHistoryByIdUser = id => {
+  return axios.post(
+    `${process.env.REACT_APP_API_URL}/getTableHistoryByIdUser`,
+    id
+  );
+};
 export default {
   getListData,
   selectFile,
   upload,
   processData,
   getTable,
-  getTableHistory
+  getTableHistory,
+  getTableHistoryByIdUser
 };

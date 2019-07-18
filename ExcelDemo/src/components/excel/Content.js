@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useGlobal } from "reactn";
 import PropTypes, { element } from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -16,6 +16,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
+import { AccessAlarm } from "@material-ui/icons";
 import { useDropzone } from "react-dropzone";
 
 import { excelServices } from "../../services";
@@ -53,7 +54,7 @@ const styles = theme => ({
 });
 
 function Content(props) {
-  console.log(props);
+  const [id, setId] = useGlobal("id");
   const gravity = useFormInput("");
   const viscosity = useFormInput("");
   const porosity = useFormInput("");
@@ -75,7 +76,8 @@ function Content(props) {
     permeability: permeability.value,
     net_thinkness: net_thinkness.value,
     depth: depth.value,
-    temperature: temperature.value
+    temperature: temperature.value,
+    id: id
   };
   const [output, setOutput] = useState("");
   const [result, setResult] = useState("");
@@ -95,6 +97,7 @@ function Content(props) {
 
   if (once2) {
     excelServices.selectFile({ filename: selectedOption }).then(res => {
+      setOnce2(false);
       if (res.data.message === "success") {
         setOpen(true);
         setNotify("success");
@@ -104,7 +107,6 @@ function Content(props) {
         setNotify("error");
         setResult("Bị lỗi gì đó rồi :(");
       }
-      setOnce2(false);
     });
   }
   console.log(files);
@@ -151,10 +153,13 @@ function Content(props) {
 
   function handleChangeRadio(e) {
     setSelectedOption(e.target.value);
-    setOnce2(true);
   }
   console.log(selectedOption);
   const { classes } = props;
+
+  const handleClickLoadData = () => {
+    setOnce2(true);
+  };
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
@@ -183,7 +188,6 @@ function Content(props) {
       <Grid item xs={2} />
       <Grid item xs={4}>
         <h1 className={classes.fontStyle}>Upload File Excel</h1>
-
         <div {...getRootProps()}>
           <input {...getInputProps()} />
           {isDragActive ? (
@@ -192,7 +196,6 @@ function Content(props) {
             <p>Drag 'n' drop some files here, or click to select files</p>
           )}
         </div>
-
         <TextField
           type="file"
           name="foo"
@@ -200,7 +203,6 @@ function Content(props) {
           className={classes.textField}
           onChange={selectedFile.onChange}
         />
-
         <Button
           variant="contained"
           color="default"
@@ -251,6 +253,15 @@ function Content(props) {
             );
           })}
         </ul>
+        <Button
+          variant="contained"
+          color="default"
+          className={classes.button}
+          onClick={handleClickLoadData}
+        >
+          Load Data
+          <AccessAlarm className={classes.rightIcon} />
+        </Button>
       </Grid>
 
       <Grid item xs={2}>

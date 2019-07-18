@@ -5,10 +5,11 @@ import { authServices } from "../../../services";
 function SignIn(props) {
   const [authenticate, setAuthenticate] = useGlobal("authenticate");
   const [id, setId] = useGlobal("id");
+  const [name, setName] = useGlobal("name");
   const username = useFormInput("");
   const pwd = useFormInput("");
   const [message, setMessage] = useState("");
-
+  console.log(id);
   function handleClick() {
     var data = {
       usernameSignIn: username.value,
@@ -19,6 +20,7 @@ function SignIn(props) {
       if (res.data.code === "SUCCESS") {
         setAuthenticate(true);
         setId(res.data.result.id);
+        setName(res.data.result.username);
       } else {
       }
     });

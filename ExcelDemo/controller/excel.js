@@ -4,9 +4,10 @@ const testFolder = "./uploads/";
 
 module.exports = {
   selectedFile: async path => {
-    await data.dropAllTable();
+    await data.delete3Table();
     path = "uploads/" + path;
-    if ((await data.import(path)) === 1) {
+    var result = await data.import(path);
+    if (result === 1) {
       return { message: "success" };
     }
   },

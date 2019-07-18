@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useGlobal } from "reactn";
 import { excelServices } from "../../services";
 import { Table, Container, Row, Col } from "react-bootstrap";
 
 function History(props) {
   const [once, setOnce] = useState(true);
-
+  const [id, setId] = useGlobal("id");
   const [data, setData] = useState([]);
   if (once) {
-    excelServices.getTableHistory().then(res => {
+    console.log(id);
+    excelServices.getTableHistoryByIdUser({ id: id }).then(res => {
       setData(res.data);
       console.log(res.data);
       console.log(data);

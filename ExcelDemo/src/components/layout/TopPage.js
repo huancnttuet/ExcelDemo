@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useGlobal } from "reactn";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -35,6 +35,9 @@ const styles = {
 };
 
 function TopPage(props) {
+  const [authenticate, setAuthenticate] = useGlobal("authenticate");
+  const [name, setName] = useGlobal("name");
+  const [id, setId] = useGlobal("id");
   const { classes } = props;
   const [count, setCount] = useState("0px");
   const [marginLeft, setMarginLeft] = useState("0px");
@@ -62,15 +65,95 @@ function TopPage(props) {
   });
 
   const goToSignIn = () => {
-    props.history.push("/signin");
+    props.history.push("/");
+  };
+  const goToSignIn2 = () => {
+    props.history.push("/");
+    onClose();
   };
   const goToSignUp = () => {
     props.history.push("/signup");
   };
-
+  const goToSignUp2 = () => {
+    props.history.push("/signup");
+    onClose();
+  };
+  const goToLogout = () => {
+    setAuthenticate(false);
+    setName("");
+    setId(0);
+    props.history.push("/");
+  };
+  const goToChangePwd = () => {
+    props.history.push("/changepwd");
+  };
   const goToHome = () => {
     props.history.push("/");
   };
+  const goToHistory = () => {
+    props.history.push("/history");
+  };
+  const goToHistory2 = () => {
+    props.history.push("/history");
+    onClose();
+  };
+  const goToForgottenAcc = () => {
+    props.history.push("/forgottenacc");
+  };
+  const goToForgottenAcc2 = () => {
+    props.history.push("/forgottenacc");
+    onClose();
+  };
+  var jsx;
+  if (authenticate) {
+    jsx = (
+      <>
+        <div style={{ marginLeft: "1000px", marginRight: "25px" }}>
+          Xin chào {name}
+        </div>
+
+        <Typography
+          variant="h6"
+          color="primary"
+          onClick={goToLogout}
+          style={{ cursor: "pointer", marginRight: "12px" }}
+        >
+          Logout
+        </Typography>
+        <Typography
+          variant="h6"
+          color="primary"
+          onClick={goToChangePwd}
+          style={{ cursor: "pointer", marginRight: "12px" }}
+        >
+          ChangePwd
+        </Typography>
+      </>
+    );
+  } else {
+    jsx = (
+      <>
+        <div style={{ marginLeft: "1000px" }}>{name}</div>
+
+        <Typography
+          variant="h6"
+          color="primary"
+          onClick={goToSignIn}
+          style={{ cursor: "pointer", marginRight: "12px" }}
+        >
+          SignIn
+        </Typography>
+        <Typography
+          variant="h6"
+          color="primary"
+          onClick={goToSignUp}
+          style={{ cursor: "pointer", marginRight: "12px" }}
+        >
+          SignUp
+        </Typography>
+      </>
+    );
+  }
 
   return (
     <div id="mainHeader" className={classes.root}>
@@ -100,34 +183,46 @@ function TopPage(props) {
           >
             Excel Demo
           </Typography>
-          <div style={{ marginLeft: "1000px" }}>Xin chào, </div>
 
-          <Typography
-            variant="h6"
-            color="primary"
-            onClick={goToSignIn}
-            style={{ cursor: "pointer", marginRight: "12px" }}
-          >
-            SignIn
-          </Typography>
-          <Typography
-            variant="h6"
-            color="primary"
-            onClick={goToSignUp}
-            style={{ cursor: "pointer", marginRight: "12px" }}
-          >
-            SignUp
-          </Typography>
+          {jsx}
         </Toolbar>
       </AppBar>
       <div id="mySidenav" className="sidenav">
         <a href="javascript:void(0)" className="closebtn" onClick={onClose}>
           &times;
         </a>
-        <a href="/signin">Login</a>
-        <a href="/signup">SignUp</a>
-        <a href="/forgottenacc">Forgotten Password</a>
-        <a href="/history">History</a>
+        <Typography
+          variant="h6"
+          color="primary"
+          onClick={goToSignIn2}
+          style={{ cursor: "pointer", marginRight: "12px", marginLeft: "20px" }}
+        >
+          SignIn
+        </Typography>
+        <Typography
+          variant="h6"
+          color="primary"
+          onClick={goToSignUp2}
+          style={{ cursor: "pointer", marginRight: "12px", marginLeft: "20px" }}
+        >
+          SignUp
+        </Typography>
+        <Typography
+          variant="h6"
+          color="primary"
+          onClick={goToForgottenAcc2}
+          style={{ cursor: "pointer", marginRight: "12px", marginLeft: "20px" }}
+        >
+          Forgotten Password
+        </Typography>
+        <Typography
+          variant="h6"
+          color="primary"
+          onClick={goToHistory2}
+          style={{ cursor: "pointer", marginRight: "12px", marginLeft: "20px" }}
+        >
+          History
+        </Typography>
       </div>
     </div>
   );

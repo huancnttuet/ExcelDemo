@@ -1,4 +1,4 @@
-import React from "react";
+import React, { setGlobal, useGlobal } from "reactn";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import TopPage from "./components/layout/TopPage";
@@ -12,26 +12,44 @@ import ForgottenAcc from "./components/user/ForgottenAcc";
 import ChangePwd from "./components/user/ChangePwd";
 import History from "./components/excel/History";
 
-class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <Router>
-          <TopPage />
-          <Route exact path="/" component={Content} />
-          <Route path="/history" component={History} />
-          <Route path="/list" component={ListData} />
-          <Route path="/details" component={Details} />
-          <Route path="/signin" component={SignIn} />
-          <Route path="/signup" component={SignUp} />
-          <Route path="/changepwd" component={ChangePwd} />
-          <Route path="/forgottenacc" component={ForgottenAcc} />
-        </Router>
+setGlobal({
+  authenticate: false,
+  id: 0,
+  name: ""
+});
 
-        <BottomPage />
-      </div>
+function App() {
+  const [authenticate, setAuthenticate] = useGlobal("authenticate");
+  var jsx;
+  if (authenticate) {
+    jsx = (
+      <>
+        <Route exact path="/" component={Content} />
+      </>
+    );
+  } else {
+    jsx = (
+      <>
+        <Route exact path="/" component={SignIn} />
+      </>
     );
   }
+  return (
+    <div>
+      <Router>
+        <TopPage />
+        {jsx}
+        <Route path="/history" component={History} />
+        <Route path="/list" component={ListData} />
+        <Route path="/details" component={Details} />
+
+        <Route path="/signup" component={SignUp} />
+        <Route path="/changepwd" component={ChangePwd} />
+        <Route path="/forgottenacc" component={ForgottenAcc} />
+        <BottomPage />
+      </Router>
+    </div>
+  );
 }
 
 export default App;

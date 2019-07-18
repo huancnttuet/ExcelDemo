@@ -2,7 +2,6 @@ const excelToJson = require("convert-excel-to-json");
 const Sequelize = require("sequelize");
 const sequelize = require("./configORM.js");
 
-var promise = sequelize.query("set FOREIGN_KEY_CHECKS=0");
 const Method = sequelize.define("method", {
   name_method: {
     type: Sequelize.STRING
@@ -61,8 +60,7 @@ var excel = {
       ]
     });
 
-    // eslint-disable-next-line no-array-constructor
-    var property = new Array(
+    var property = [
       {
         type: "Gravity"
       },
@@ -90,9 +88,9 @@ var excel = {
       {
         type: "Temperature"
       }
-    );
+    ];
 
-    var method = new Array();
+    var method = [];
 
     result["Summary of EOR"].forEach(function(element, index) {
       method[index] = {
@@ -102,7 +100,7 @@ var excel = {
 
     // console.log(method);
 
-    var rules = new Array();
+    var rules = [];
 
     function min(element) {
       if (element + "" !== "") {
@@ -414,9 +412,12 @@ var excel = {
       return [key.methodId, key.propertyId, key.info];
     });
   },
-  dropAllTable: async () => {
-    console.log("delete all table");
-    return await sequelize.drop();
+  delete3Table: async () => {
+    console.log("delete 3 table rule,property,method");
+    await sequelize.query(`truncate table rules`);
+    await sequelize.query(`truncate table properties`);
+    await sequelize.query(`truncate table methods`);
+    return 0;
   }
 };
 
