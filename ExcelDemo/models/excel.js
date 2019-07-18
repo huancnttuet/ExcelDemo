@@ -1,53 +1,39 @@
 const excelToJson = require("convert-excel-to-json");
-
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize("demodb", "root", "12345678", {
-  dialect: "mysql",
-  logging: false
+const sequelize = require("./configORM.js");
+
+var promise = sequelize.query("set FOREIGN_KEY_CHECKS=0");
+const Method = sequelize.define("method", {
+  name_method: {
+    type: Sequelize.STRING
+  }
 });
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch(err => {
-    console.error("Unable to connect to the database:", err);
-  });
+const Property = sequelize.define("property", {
+  type: {
+    type: Sequelize.STRING
+  }
+});
 
-  var promise = sequelize.query("set FOREIGN_KEY_CHECKS=0");
-  const Method = sequelize.define("method", {
-    name_method: {
-      type: Sequelize.STRING
-    }
-  });
+const Rule = sequelize.define("rule", {
+  min: {
+    type: Sequelize.DOUBLE
+  },
+  max: {
+    type: Sequelize.DOUBLE
+  },
+  info: {
+    type: Sequelize.STRING
+  },
+  propertyId: {
+    type: Sequelize.INTEGER
+  },
+  methodId: {
+    type: Sequelize.INTEGER
+  }
+});
 
-  const Property = sequelize.define("property", {
-    type: {
-      type: Sequelize.STRING
-    }
-  });
-
-  const Rule = sequelize.define("rule", {
-    min: {
-      type: Sequelize.DOUBLE
-    },
-    max: {
-      type: Sequelize.DOUBLE
-    },
-    info: {
-      type: Sequelize.STRING
-    },
-    propertyId: {
-      type: Sequelize.INTEGER
-    },
-    methodId: {
-      type: Sequelize.INTEGER
-    }
-  });
-
-
-var querydb = {
+var excel = {
   import: filename => {
     const result = excelToJson({
       sourceFile: filename,
@@ -119,14 +105,14 @@ var querydb = {
     var rules = new Array();
 
     function min(element) {
-      if (element + "" != "") {
+      if (element + "" !== "") {
         var a = (element + "").split("-", 2)[0];
         var b = (element + "").split("-", 2)[1];
         return Math.min(a, b);
       } else return "";
     }
     function max(element) {
-      if (element + "" != "") {
+      if (element + "" !== "") {
         var a = (element + "").split("-", 2)[0];
         var b = (element + "").split("-", 2)[1];
         return Math.max(a, b);
@@ -199,7 +185,6 @@ var querydb = {
       });
     });
 
-    
     var kq1 = new Promise(function(resolve, reject) {
       Method.sync({ force: true }).then(() => {
         // Table created
@@ -235,7 +220,7 @@ var querydb = {
         rules.forEach(function(element, index) {
           // statements
           Rule.create(element).then(aaa => {
-            if (aaa["dataValues"]["id"] == rules.length) {
+            if (aaa["dataValues"]["id"] === rules.length) {
               console.log("Rules success");
               resolve(1);
             }
@@ -246,11 +231,11 @@ var querydb = {
 
     var kq = new Promise(function(resolve, reject) {
       kq1.then(a => {
-        if (a == 1) {
+        if (a === 1) {
           kq2.then(b => {
-            if (b == 1) {
+            if (b === 1) {
               kq3.then(c => {
-                if (c == 1) {
+                if (c === 1) {
                   resolve(1);
                 } else {
                   resolve(0);
@@ -324,7 +309,7 @@ var querydb = {
         });
         return aft;
       });
-    if (net == "") {
+    if (net === "") {
       var pnet = sequelize
         .query("SELECT * FROM rules WHERE info is NULL", {
           replacements: [net],
@@ -373,7 +358,7 @@ var querydb = {
               });
             }
           });
-          if (index == 8) {
+          if (index === 8) {
             return ck;
           }
         });
@@ -414,25 +399,25 @@ var querydb = {
     return end;
   },
   getTable: async () => {
-    return await Method.findAll(
-      {
-        attributes: ['name_method'],
-        raw: true
-      }
-    ).map((key) => {
+    return await Method.findAll({
+      attributes: ["name_method"],
+      raw: true
+    }).map(key => {
       return key.name_method;
-    })
+    });
   },
   getRule: async () => {
-    return await Rule.findAll(
-      {
-        attributes: ['info','methodId','propertyId'],
-        raw: true
-      }
-    ).map(key => {
-      return [key.methodId, key.propertyId, key.info]
-    })
+    return await Rule.findAll({
+      attributes: ["info", "methodId", "propertyId"],
+      raw: true
+    }).map(key => {
+      return [key.methodId, key.propertyId, key.info];
+    });
+  },
+  dropAllTable: async () => {
+    console.log("delete all table");
+    return await sequelize.drop();
   }
 };
 
-module.exports = querydb;
+module.exports = excel;

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import PropTypes, { element } from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import axios from "axios";
+
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
@@ -11,12 +11,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
-import MySnackbarContent from "./MySnackbarContent";
+import MySnackbarContent from "../../helper/MySnackbarContent";
 import Snackbar from "@material-ui/core/Snackbar";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import { useDropzone } from "react-dropzone";
+
+import { excelServices } from "../../services";
 
 const styles = theme => ({
   button: {
@@ -51,6 +53,7 @@ const styles = theme => ({
 });
 
 function Content(props) {
+  console.log(props);
   const gravity = useFormInput("");
   const viscosity = useFormInput("");
   const porosity = useFormInput("");
@@ -84,55 +87,49 @@ function Content(props) {
   const [selectedOption, setSelectedOption] = useState("");
 
   if (once) {
-    axios.get("http://localhost:8000/getListData").then(res => {
+    excelServices.getListData().then(res => {
       setFiles(res.data.files);
       setOnce(false);
     });
   }
 
   if (once2) {
-    axios
-      .post("http://localhost:8000/selectFile", { filename: selectedOption })
-      .then(res => {
-        if (res.data.message === "success") {
-          setOpen(true);
-          setNotify("success");
-          setResult(`Đã chọn file ${selectedOption}`);
-        } else {
-          setOpen(true);
-          setNotify("error");
-          setResult("Bị lỗi gì đó rồi :(");
-        }
-        setOnce2(false);
-      });
+    excelServices.selectFile({ filename: selectedOption }).then(res => {
+      if (res.data.message === "success") {
+        setOpen(true);
+        setNotify("success");
+        setResult(`Đã chọn file ${selectedOption}`);
+      } else {
+        setOpen(true);
+        setNotify("error");
+        setResult("Bị lỗi gì đó rồi :(");
+      }
+      setOnce2(false);
+    });
   }
   console.log(files);
   function handleClick1() {
     const data = new FormData();
     console.log(selectedFile.value);
     data.append("foo", selectedFile.value);
-    axios
-      .post("http://localhost:8000/upload", data, {
-        // receive two    parameter endpoint url ,form data
-      })
-      .then(res => {
-        // then print response status
-        setResult(res.data.message);
-        setOpen(true);
-        if (res.data.message === "success") {
-          setNotify("success");
-          setOnce(true);
-        } else if (res.data.message === "error") {
-          setNotify("error");
-        } else {
-          setNotify("warning");
-        }
-      });
+    excelServices.upload(data).then(res => {
+      // then print response status
+      setResult(res.data.message);
+      setOpen(true);
+      if (res.data.message === "success") {
+        setNotify("success");
+        setOnce(true);
+      } else if (res.data.message === "error") {
+        setNotify("error");
+      } else {
+        setNotify("warning");
+      }
+    });
   }
 
   function handleClick2() {
-    axios
-      .get("http://localhost:8000/process", {
+    excelServices
+      .processData({
         params: paramsValue
       })
       .then(res => {
@@ -165,23 +162,19 @@ function Content(props) {
     const data = new FormData();
 
     data.append("foo", acceptedFiles[0]);
-    axios
-      .post("http://localhost:8000/upload", data, {
-        // receive two    parameter endpoint url ,form data
-      })
-      .then(res => {
-        // then print response status
-        setResult(res.data.message);
-        setOpen(true);
-        if (res.data.message === "success") {
-          setNotify("success");
-          setOnce(true);
-        } else if (res.data.message === "error") {
-          setNotify("error");
-        } else {
-          setNotify("warning");
-        }
-      });
+    excelServices.upload(data).then(res => {
+      // then print response status
+      setResult(res.data.message);
+      setOpen(true);
+      if (res.data.message === "success") {
+        setNotify("success");
+        setOnce(true);
+      } else if (res.data.message === "error") {
+        setNotify("error");
+      } else {
+        setNotify("warning");
+      }
+    });
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -375,25 +368,6 @@ function Content(props) {
       </Grid>
 
       <Grid item xs={2} className={classes.gridCenter}>
-        <FormControl className={classes.textField}>
-          <InputLabel htmlFor="Choose Data">Choose Data</InputLabel>
-          <Select
-            //  {...files}
-            inputProps={{
-              name: "choose_data",
-              id: "choose_data"
-            }}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={1}>Sandstone or carbonat</MenuItem>
-            <MenuItem value={2}>Sandstone</MenuItem>
-            <MenuItem value={3}>
-              Sandstone or Carbonate[PreferablyCarbonate]
-            </MenuItem>
-          </Select>
-        </FormControl>
         <h1>_______________________</h1>
         <Card className={classes.cardStyle}>
           <CardHeader

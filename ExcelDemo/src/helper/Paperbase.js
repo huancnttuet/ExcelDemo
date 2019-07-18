@@ -1,31 +1,31 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Hidden from '@material-ui/core/Hidden';
-import Navigator from './Navigator';
-import Content from './Content';
-import Header from './Header';
+import React from "react";
+import PropTypes from "prop-types";
+import { createMuiTheme, withStyles } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Hidden from "@material-ui/core/Hidden";
+import Navigator from "../Navigator";
+import Content from "../components/excel/Content";
+import Header from "../components/layout/Header";
 
 let theme = createMuiTheme({
   typography: {
     h5: {
       fontWeight: 500,
       fontSize: 26,
-      letterSpacing: 0.5,
-    },
+      letterSpacing: 0.5
+    }
   },
   palette: {
     primary: {
-      light: '#63ccff',
-      main: '#009be5',
-      dark: '#006db3',
-    },
+      light: "#63ccff",
+      main: "#009be5",
+      dark: "#006db3"
+    }
   },
   shape: {
-    borderRadius: 8,
-  },
+    borderRadius: 8
+  }
 });
 
 theme = {
@@ -33,120 +33,120 @@ theme = {
   overrides: {
     MuiDrawer: {
       paper: {
-        backgroundColor: '#18202c',
-      },
+        backgroundColor: "#18202c"
+      }
     },
     MuiButton: {
       label: {
-        textTransform: 'none',
+        textTransform: "none"
       },
       contained: {
-        boxShadow: 'none',
-        '&:active': {
-          boxShadow: 'none',
-        },
-      },
+        boxShadow: "none",
+        "&:active": {
+          boxShadow: "none"
+        }
+      }
     },
     MuiTabs: {
       root: {
-        marginLeft: theme.spacing.unit*1,
+        marginLeft: theme.spacing.unit * 1
       },
       indicator: {
         height: 3,
         borderTopLeftRadius: 3,
         borderTopRightRadius: 3,
-        backgroundColor: theme.palette.common.white,
-      },
+        backgroundColor: theme.palette.common.white
+      }
     },
     MuiTab: {
       root: {
-        textTransform: 'none',
-        margin: '0 16px',
+        textTransform: "none",
+        margin: "0 16px",
         minWidth: 0,
         padding: 0,
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up("md")]: {
           padding: 0,
-          minWidth: 0,
-        },
-      },
+          minWidth: 0
+        }
+      }
     },
     MuiIconButton: {
       root: {
-        padding: theme.spacing.unit * 1,
-      },
+        padding: theme.spacing.unit * 1
+      }
     },
     MuiTooltip: {
       tooltip: {
-        borderRadius: 4,
-      },
+        borderRadius: 4
+      }
     },
     MuiDivider: {
       root: {
-        backgroundColor: '#404854',
-      },
+        backgroundColor: "#404854"
+      }
     },
     MuiListItemText: {
       primary: {
-        fontWeight: theme.typography.fontWeightMedium,
-      },
+        fontWeight: theme.typography.fontWeightMedium
+      }
     },
     MuiListItemIcon: {
       root: {
-        color: 'inherit',
+        color: "inherit",
         marginRight: 0,
-        '& svg': {
-          fontSize: 20,
-        },
-      },
+        "& svg": {
+          fontSize: 20
+        }
+      }
     },
     MuiAvatar: {
       root: {
         width: 32,
-        height: 32,
-      },
-    },
+        height: 32
+      }
+    }
   },
   props: {
     MuiTab: {
-      disableRipple: true,
-    },
+      disableRipple: true
+    }
   },
   mixins: {
     ...theme.mixins,
     toolbar: {
-      minHeight: 48,
-    },
-  },
+      minHeight: 48
+    }
+  }
 };
 
 const drawerWidth = 256;
 
 const styles = {
   root: {
-    display: 'flex',
-    minHeight: '100vh',
+    display: "flex",
+    minHeight: "100vh"
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: drawerWidth,
-      flexShrink: 0,
-    },
+      flexShrink: 0
+    }
   },
   appContent: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column"
   },
   mainContent: {
     flex: 1,
-    padding: '48px 36px 0',
-    background: '#eaeff1',
-  },
+    padding: "48px 36px 0",
+    background: "#eaeff1"
+  }
 };
 
 class Paperbase extends React.Component {
   state = {
-    mobileOpen: false,
+    mobileOpen: false
   };
 
   handleDrawerToggle = () => {
@@ -186,7 +186,7 @@ class Paperbase extends React.Component {
 }
 
 Paperbase.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Paperbase);
