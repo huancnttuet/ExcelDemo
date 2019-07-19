@@ -5,7 +5,7 @@ const sequelize = new Sequelize("demodb", "root", "12345678", {
   host: "localhost",
   dialect: "mysql" /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
   define: {
-    timestamps: true
+    timestamps: false
   },
   logging: false
 });
