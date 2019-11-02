@@ -28,7 +28,7 @@
     "react-scripts": "^3.0.0",
     "react-sticky-footer": "0.1.0-rc3",
     "reactn": "^2.1.4",
-    "sequelize": "^5.7.6",
+    "sequelize": "^5.15.1",
     "superagent": "^5.1.0"
   },
   "scripts": {
